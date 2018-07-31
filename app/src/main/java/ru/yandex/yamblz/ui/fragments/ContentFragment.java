@@ -37,10 +37,10 @@ public class ContentFragment extends BaseFragment {
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(new ContentAdapter());
 
-        setChangeNumColumsButtonsClickListeners();
+        setNumColumnsClickListeners();
     }
 
-    private void setChangeNumColumsButtonsClickListeners() {
+    private void setNumColumnsClickListeners() {
         Button[] buttons = new Button[] { button1Col, button2Col, button3Col };
 
         for(int i = 0; i < buttons.length; i++) {
