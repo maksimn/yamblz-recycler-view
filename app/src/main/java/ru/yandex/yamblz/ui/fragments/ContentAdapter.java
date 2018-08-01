@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -40,7 +41,26 @@ class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> 
         return colors.get(position);
     }
 
-    static class ContentHolder extends RecyclerView.ViewHolder {
+    public void onItemDismiss(int position) {
+        colors.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(colors, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(colors, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
+    }
+
+    public static class ContentHolder extends RecyclerView.ViewHolder {
         ContentHolder(View itemView) {
             super(itemView);
         }

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,15 +37,19 @@ public class ContentFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv.setAdapter(new ContentAdapter());
 
+        final ContentAdapter adapter = new ContentAdapter();
+        final ItemTouchHelper ith = createItemTouchHelper(adapter);
+
+        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        rv.setAdapter(adapter);
         setNumColumnsClickListeners();
+        ith.attachToRecyclerView(rv);
     }
 
     private void setNumColumnsClickListeners() {
-        Button[] buttons = new Button[] { button1Col, button2Col, button3Col };
-        Context context = getContext();
+        final Button[] buttons = new Button[] { button1Col, button2Col, button3Col };
+        final Context context = getContext();
 
         for(int i = 0; i < buttons.length; i++) {
             final int numColumns = i + 1;
@@ -53,5 +58,42 @@ public class ContentFragment extends BaseFragment {
                 rv.setLayoutManager(new GridLayoutManager(context, numColumns));
             });
         }
+    }
+
+    private ItemTouchHelper createItemTouchHelper(ContentAdapter adapter) {
+        final ItemTouchHelper ith = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+                int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+                return makeMovementFlags(dragFlags, swipeFlags);
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                adapter.onItemMove(viewHolder.getAdapterPosition(),
+                        target.getAdapterPosition());
+
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                adapter.onItemDismiss(viewHolder.getAdapterPosition());
+            }
+
+            @Override
+            public boolean isLongPressDragEnabled() {
+                return true;
+            }
+
+            @Override
+            public boolean isItemViewSwipeEnabled() {
+                return true;
+            }
+        });
+
+        return ith;
     }
 }
