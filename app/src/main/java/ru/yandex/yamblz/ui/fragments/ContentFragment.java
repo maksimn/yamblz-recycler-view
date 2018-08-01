@@ -1,8 +1,10 @@
 package ru.yandex.yamblz.ui.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -42,12 +44,13 @@ public class ContentFragment extends BaseFragment {
 
     private void setNumColumnsClickListeners() {
         Button[] buttons = new Button[] { button1Col, button2Col, button3Col };
+        Context context = getContext();
 
         for(int i = 0; i < buttons.length; i++) {
-            final int _i = i;
+            final int numColumns = i + 1;
 
             buttons[i].setOnClickListener(v -> {
-                int numColumns = _i + 1;
+                rv.setLayoutManager(new GridLayoutManager(context, numColumns));
             });
         }
     }
