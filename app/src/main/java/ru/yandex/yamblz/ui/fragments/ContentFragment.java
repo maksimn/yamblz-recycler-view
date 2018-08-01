@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
@@ -41,10 +40,10 @@ public class ContentFragment extends BaseFragment {
         final ContentAdapter adapter = new ContentAdapter();
         final ItemTouchHelper ith = createItemTouchHelper(adapter);
 
-        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        ith.attachToRecyclerView(rv);
+        rv.setLayoutManager(new GridLayoutManager(getContext(), 1));
         rv.setAdapter(adapter);
         setNumColumnsClickListeners();
-        ith.attachToRecyclerView(rv);
     }
 
     private void setNumColumnsClickListeners() {
@@ -72,10 +71,7 @@ public class ContentFragment extends BaseFragment {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
                                   RecyclerView.ViewHolder target) {
-                adapter.onItemMove(viewHolder.getAdapterPosition(),
-                        target.getAdapterPosition());
-
-                return true;
+                return adapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
             }
 
             @Override
