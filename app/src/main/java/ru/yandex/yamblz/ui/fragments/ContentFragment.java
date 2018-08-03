@@ -66,7 +66,7 @@ public class ContentFragment extends BaseFragment {
                                         RecyclerView.ViewHolder viewHolder) {
                 int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.RIGHT |
                         ItemTouchHelper.LEFT;
-                int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+                int swipeFlags = ItemTouchHelper.RIGHT;
                 return makeMovementFlags(dragFlags, swipeFlags);
             }
 
