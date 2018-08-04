@@ -14,6 +14,7 @@ import android.widget.Button;
 
 import butterknife.BindView;
 import ru.yandex.yamblz.R;
+import ru.yandex.yamblz.ui.animations.CustomizedGridLayoutManager;
 
 public class ContentFragment extends BaseFragment {
 
@@ -41,7 +42,8 @@ public class ContentFragment extends BaseFragment {
         final ItemTouchHelper ith = createItemTouchHelper(adapter);
 
         ith.attachToRecyclerView(rv);
-        rv.setLayoutManager(new GridLayoutManager(getContext(), 1));
+        CustomizedGridLayoutManager cglm = new CustomizedGridLayoutManager(getContext(), 1);
+        rv.setLayoutManager(cglm);
         rv.setAdapter(adapter);
         setNumColumnsClickListeners();
     }
@@ -54,7 +56,9 @@ public class ContentFragment extends BaseFragment {
             final int numColumns = i + 1;
 
             buttons[i].setOnClickListener(v -> {
-                rv.setLayoutManager(new GridLayoutManager(context, numColumns));
+                CustomizedGridLayoutManager cglm = new CustomizedGridLayoutManager(context,
+                        numColumns);
+                rv.setLayoutManager(cglm);
             });
         }
     }
