@@ -14,7 +14,7 @@ import android.widget.Button;
 
 import butterknife.BindView;
 import ru.yandex.yamblz.R;
-import ru.yandex.yamblz.ui.animations.CustomizedGridLayoutManager;
+import ru.yandex.yamblz.ui.animations.NumColumnsAnimator;
 
 public class ContentFragment extends BaseFragment {
 
@@ -27,6 +27,8 @@ public class ContentFragment extends BaseFragment {
     Button button2Col;
     @BindView(R.id.button3Col)
     Button button3Col;
+
+    NumColumnsAnimator numColumnsAnimator = new NumColumnsAnimator();
 
     @NonNull
     @Override
@@ -42,9 +44,10 @@ public class ContentFragment extends BaseFragment {
         final ItemTouchHelper ith = createItemTouchHelper(adapter);
 
         ith.attachToRecyclerView(rv);
-        CustomizedGridLayoutManager cglm = new CustomizedGridLayoutManager(getContext(), 1);
+        CustGridLayoutManager cglm = new CustGridLayoutManager(getContext(), 1);
         rv.setLayoutManager(cglm);
         rv.setAdapter(adapter);
+        rv.setItemAnimator(numColumnsAnimator);
         setNumColumnsClickListeners();
     }
 
@@ -56,8 +59,10 @@ public class ContentFragment extends BaseFragment {
             final int numColumns = i + 1;
 
             buttons[i].setOnClickListener(v -> {
-                CustomizedGridLayoutManager cglm = new CustomizedGridLayoutManager(context,
-                        numColumns);
+                ContentAdapter adapter = (ContentAdapter) rv.getAdapter();
+                adapter.notifyItemChanged(0);
+
+                CustGridLayoutManager cglm = new CustGridLayoutManager(context, numColumns);
                 rv.setLayoutManager(cglm);
             });
         }
@@ -97,5 +102,16 @@ public class ContentFragment extends BaseFragment {
         });
 
         return ith;
+    }
+}
+
+class CustGridLayoutManager extends GridLayoutManager {
+    public CustGridLayoutManager(Context context, int spanCount) {
+        super(context, spanCount);
+    }
+
+    @Override
+    public boolean supportsPredictiveItemAnimations() {
+        return true;
     }
 }

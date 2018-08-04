@@ -14,14 +14,15 @@ import java.util.Random;
 
 import ru.yandex.yamblz.R;
 
-class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> {
+public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> {
 
     private final Random rnd = new Random();
     private final List<Integer> colors = new ArrayList<>();
 
     @Override
     public ContentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ContentHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.content_item, parent, false));
+        return new ContentHolder(LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.content_item, parent, false));
     }
 
     @Override
