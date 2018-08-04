@@ -62,8 +62,8 @@ public class ContentFragment extends BaseFragment {
                 ContentAdapter adapter = (ContentAdapter) rv.getAdapter();
                 adapter.notifyItemChanged(0);
 
-                CustGridLayoutManager cglm = new CustGridLayoutManager(context, numColumns);
-                rv.setLayoutManager(cglm);
+                // CustGridLayoutManager cglm = new CustGridLayoutManager(context, numColumns);
+                // rv.setLayoutManager(cglm);
             });
         }
     }
