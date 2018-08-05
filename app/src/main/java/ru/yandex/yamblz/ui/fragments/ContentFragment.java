@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
@@ -44,7 +44,7 @@ public class ContentFragment extends BaseFragment {
         final ItemTouchHelper ith = createItemTouchHelper(adapter);
 
         ith.attachToRecyclerView(rv);
-        CustGridLayoutManager cglm = new CustGridLayoutManager(getContext(), 1);
+        LinearLayoutManager cglm = new LinearLayoutManager(getContext());
         rv.setLayoutManager(cglm);
         rv.setAdapter(adapter);
         rv.setItemAnimator(numColumnsAnimator);
@@ -56,14 +56,9 @@ public class ContentFragment extends BaseFragment {
         final Context context = getContext();
 
         for(int i = 0; i < buttons.length; i++) {
-            final int numColumns = i + 1;
-
             buttons[i].setOnClickListener(v -> {
                 ContentAdapter adapter = (ContentAdapter) rv.getAdapter();
                 adapter.notifyItemChanged(0);
-
-                // CustGridLayoutManager cglm = new CustGridLayoutManager(context, numColumns);
-                // rv.setLayoutManager(cglm);
             });
         }
     }
@@ -102,16 +97,5 @@ public class ContentFragment extends BaseFragment {
         });
 
         return ith;
-    }
-}
-
-class CustGridLayoutManager extends GridLayoutManager {
-    public CustGridLayoutManager(Context context, int spanCount) {
-        super(context, spanCount);
-    }
-
-    @Override
-    public boolean supportsPredictiveItemAnimations() {
-        return true;
     }
 }
