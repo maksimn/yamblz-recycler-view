@@ -57,8 +57,12 @@ public class ContentFragment extends BaseFragment {
 
         for(int i = 0; i < buttons.length; i++) {
             buttons[i].setOnClickListener(v -> {
-                ContentAdapter adapter = (ContentAdapter) rv.getAdapter();
-                adapter.notifyItemChanged(0);
+                final ContentAdapter adapter = (ContentAdapter) rv.getAdapter();
+                final LinearLayoutManager layoutManager = (LinearLayoutManager)
+                        rv.getLayoutManager();
+                final int start = layoutManager.findFirstVisibleItemPosition();
+                final int end = layoutManager.findLastVisibleItemPosition();
+                adapter.notifyItemRangeChanged(start, end - start + 1);
             });
         }
     }
