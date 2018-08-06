@@ -1,17 +1,15 @@
 package ru.yandex.yamblz.ui.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import butterknife.BindView;
 import ru.yandex.yamblz.R;
 import ru.yandex.yamblz.ui.animations.NumColumnsAnimator;
@@ -28,8 +26,6 @@ public class ContentFragment extends BaseFragment {
     @BindView(R.id.button3Col)
     Button button3Col;
 
-    NumColumnsAnimator numColumnsAnimator = new NumColumnsAnimator();
-
     @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -44,22 +40,20 @@ public class ContentFragment extends BaseFragment {
         final ItemTouchHelper ith = createItemTouchHelper(adapter);
 
         ith.attachToRecyclerView(rv);
-        LinearLayoutManager cglm = new LinearLayoutManager(getContext());
-        rv.setLayoutManager(cglm);
+        GridLayoutManager glm = new GridLayoutManager(getContext(), 1);
+        rv.setLayoutManager(glm);
         rv.setAdapter(adapter);
-        rv.setItemAnimator(numColumnsAnimator);
+        rv.setItemAnimator(new NumColumnsAnimator());
         setNumColumnsClickListeners();
     }
 
     private void setNumColumnsClickListeners() {
         final Button[] buttons = new Button[] { button1Col, button2Col, button3Col };
-        final Context context = getContext();
 
         for(int i = 0; i < buttons.length; i++) {
             buttons[i].setOnClickListener(v -> {
                 final ContentAdapter adapter = (ContentAdapter) rv.getAdapter();
-                final LinearLayoutManager layoutManager = (LinearLayoutManager)
-                        rv.getLayoutManager();
+                final GridLayoutManager layoutManager = (GridLayoutManager) rv.getLayoutManager();
                 final int start = layoutManager.findFirstVisibleItemPosition();
                 final int end = layoutManager.findLastVisibleItemPosition();
                 adapter.notifyItemRangeChanged(start, end - start + 1);
