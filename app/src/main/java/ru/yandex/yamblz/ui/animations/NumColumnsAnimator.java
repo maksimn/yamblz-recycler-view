@@ -15,6 +15,7 @@ import android.widget.TextView;
 public class NumColumnsAnimator extends RecyclerView.ItemAnimator {
     private static int mNumColumns;
     private RecyclerView recyclerView;
+    private boolean mIsAnimationRunning;
 
     public NumColumnsAnimator(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
@@ -49,7 +50,7 @@ public class NumColumnsAnimator extends RecyclerView.ItemAnimator {
                                  @NonNull ItemHolderInfo preLayoutInfo,
                                  @NonNull ItemHolderInfo postLayoutInfo) {
         final ArgbEvaluator colorEvaluator = new ArgbEvaluator();
-        final int DURATION = 900;
+        final int DURATION = 3000;
         TextView itemView = (TextView) oldHolder.itemView;
 
         final int backgroundColor = ((ColorDrawable) itemView.getBackground()).getColor();
@@ -68,12 +69,12 @@ public class NumColumnsAnimator extends RecyclerView.ItemAnimator {
         set.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
-
             }
 
             @Override
             public void onAnimationEnd(Animator animator) {
                 dispatchAnimationFinished(newHolder);
+                mIsAnimationRunning = false;
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(
                         recyclerView.getContext(), getNumColumns());
                 itemView.setTextColor(textColor);
@@ -89,6 +90,7 @@ public class NumColumnsAnimator extends RecyclerView.ItemAnimator {
             public void onAnimationRepeat(Animator animator) {
             }
         });
+        mIsAnimationRunning = true;
         set.start();
 
         return true;
@@ -111,6 +113,6 @@ public class NumColumnsAnimator extends RecyclerView.ItemAnimator {
 
     @Override
     public boolean isRunning() {
-        return false;
+        return mIsAnimationRunning;
     }
 }

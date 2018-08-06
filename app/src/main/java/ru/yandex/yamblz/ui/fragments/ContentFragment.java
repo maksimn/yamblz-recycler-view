@@ -7,6 +7,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -45,6 +46,14 @@ public class ContentFragment extends BaseFragment {
         rv.setAdapter(adapter);
         rv.setItemAnimator(new NumColumnsAnimator(rv));
         setNumColumnsClickListeners();
+
+        rv.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView _rv, MotionEvent e) {
+                NumColumnsAnimator animator = (NumColumnsAnimator) rv.getItemAnimator();
+                return animator.isRunning();
+            }
+        });
     }
 
     private void setNumColumnsClickListeners() {
@@ -52,15 +61,18 @@ public class ContentFragment extends BaseFragment {
 
         for(int i = 0; i < buttons.length; i++) {
             final int numColumns = i + 1;
+            final NumColumnsAnimator animator = (NumColumnsAnimator) rv.getItemAnimator();
 
             buttons[i].setOnClickListener(v -> {
-                final ContentAdapter adapter = (ContentAdapter) rv.getAdapter();
-                final GridLayoutManager layoutManager = (GridLayoutManager) rv.getLayoutManager();
-                final NumColumnsAnimator animator = (NumColumnsAnimator) rv.getItemAnimator();
-                animator.setNumColumns(numColumns);
-                final int start = layoutManager.findFirstVisibleItemPosition();
-                final int end = layoutManager.findLastVisibleItemPosition();
-                adapter.notifyItemRangeChanged(start, end - start + 1);
+                if (!animator.isRunning()) {
+                    final ContentAdapter adapter = (ContentAdapter) rv.getAdapter();
+                    final GridLayoutManager layoutManager = (GridLayoutManager)
+                            rv.getLayoutManager();
+                    animator.setNumColumns(numColumns);
+                    final int start = layoutManager.findFirstVisibleItemPosition();
+                    final int end = layoutManager.findLastVisibleItemPosition();
+                    adapter.notifyItemRangeChanged(start, end - start + 1);
+                }
             });
         }
     }
