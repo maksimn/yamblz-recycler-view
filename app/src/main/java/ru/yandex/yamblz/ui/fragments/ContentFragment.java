@@ -43,7 +43,7 @@ public class ContentFragment extends BaseFragment {
         GridLayoutManager glm = new GridLayoutManager(getContext(), 1);
         rv.setLayoutManager(glm);
         rv.setAdapter(adapter);
-        rv.setItemAnimator(new NumColumnsAnimator());
+        rv.setItemAnimator(new NumColumnsAnimator(rv));
         setNumColumnsClickListeners();
     }
 
@@ -51,9 +51,13 @@ public class ContentFragment extends BaseFragment {
         final Button[] buttons = new Button[] { button1Col, button2Col, button3Col };
 
         for(int i = 0; i < buttons.length; i++) {
+            final int numColumns = i + 1;
+
             buttons[i].setOnClickListener(v -> {
                 final ContentAdapter adapter = (ContentAdapter) rv.getAdapter();
                 final GridLayoutManager layoutManager = (GridLayoutManager) rv.getLayoutManager();
+                final NumColumnsAnimator animator = (NumColumnsAnimator) rv.getItemAnimator();
+                animator.setNumColumns(numColumns);
                 final int start = layoutManager.findFirstVisibleItemPosition();
                 final int end = layoutManager.findLastVisibleItemPosition();
                 adapter.notifyItemRangeChanged(start, end - start + 1);
